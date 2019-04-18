@@ -1,203 +1,16 @@
 ---
-# Source: stub-helm-chart/templates/podsecuritypolicy.yaml
-
-apiVersion: extensions/v1beta1
-kind: PodSecurityPolicy
-metadata:
-  name: release-name-stub-helm-chart
-  labels:
-    app: stub-helm-chart
-    chart: stub-helm-chart-3.3.1
-    heritage: Tiller
-    release: release-name
-  annotations:
-    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'docker/default'
-    seccomp.security.alpha.kubernetes.io/defaultProfileName:  'docker/default'
-    apparmor.security.beta.kubernetes.io/allowedProfileNames: 'runtime/default'
-    apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
-spec:
-  privileged: false
-  allowPrivilegeEscalation: false
-  requiredDropCapabilities:
-    # Default set from Docker, without DAC_OVERRIDE or CHOWN
-    - FOWNER
-    - FSETID
-    - KILL
-    - SETGID
-    - SETUID
-    - SETPCAP
-    - NET_BIND_SERVICE
-    - NET_RAW
-    - SYS_CHROOT
-    - MKNOD
-    - AUDIT_WRITE
-    - SETFCAP
-  volumes:
-    - 'configMap'
-    - 'emptyDir'
-    - 'projected'
-    - 'secret'
-    - 'downwardAPI'
-    - 'persistentVolumeClaim'
-  hostNetwork: false
-  hostIPC: false
-  hostPID: false
-  runAsUser:
-    rule: 'RunAsAny'
-  seLinux:
-    rule: 'RunAsAny'
-  supplementalGroups:
-    rule: 'RunAsAny'
-  fsGroup:
-    rule: 'RunAsAny'
-  readOnlyRootFilesystem: false
-
----
-# Source: stub-helm-chart/templates/secret.yaml
-
-apiVersion: v1
-kind: Secret
-metadata:
-  name: release-name-stub-helm-chart
-  labels:
-    app: stub-helm-chart
-    chart: stub-helm-chart-3.3.1
-    release: release-name
-    heritage: Tiller
-type: Opaque
-data:
-  admin-user: "YWRtaW4="
-  admin-password: "OWYyQUVjZDJyVlVFejNmY3g4NXFZUWlQc1NkWXQ0VFEwQ2tnVlhKNw=="
-  ldap-toml: ""
-
----
-# Source: stub-helm-chart/templates/configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: release-name-stub-helm-chart
-  labels:
-    app: stub-helm-chart
-    chart: stub-helm-chart-3.3.1
-    release: release-name
-    heritage: Tiller
-data:
-  grafana.ini: |
-    [analytics]
-    check_for_updates = true
-    [grafana_net]
-    url = https://grafana.net
-    [log]
-    mode = console
-    [paths]
-    data = /var/lib/grafana/data
-    logs = /var/log/grafana
-    plugins = /var/lib/grafana/plugins
-    provisioning = /etc/grafana/provisioning
-
----
-# Source: stub-helm-chart/templates/tests/test-configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: release-name-stub-helm-chart-test
-  labels:
-    app: release-name-stub-helm-chart
-    chart: "stub-helm-chart-3.3.1"
-    heritage: "Tiller"
-    release: "release-name"
-data:
-  run.sh: |-
-    @test "Test Health" {
-      url="http://release-name-stub-helm-chart/api/health"
-
-      code=$(curl -s -o /dev/null -I -w "%{http_code}" $url)
-      [ "$code" == "200" ]
-    }
-
----
 # Source: stub-helm-chart/templates/serviceaccount.yaml
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
-    heritage: Tiller
-    release: release-name
-  name: release-name-stub-helm-chart
-
----
-# Source: stub-helm-chart/templates/clusterrole.yaml
-
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  labels:
-    app: stub-helm-chart
-    chart: stub-helm-chart-3.3.1
     release: release-name
     heritage: Tiller
-  name: release-name-stub-helm-chart-clusterrole
-rules: []
+  name: svcacct1
 
----
-# Source: stub-helm-chart/templates/clusterrolebinding.yaml
 
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: release-name-stub-helm-chart-clusterrolebinding
-  labels:
-    app: stub-helm-chart
-    chart: stub-helm-chart-3.3.1
-    release: release-name
-    heritage: Tiller
-subjects:
-  - kind: ServiceAccount
-    name: release-name-stub-helm-chart
-    namespace: debug
-roleRef:
-  kind: ClusterRole
-  name: release-name-stub-helm-chart-clusterrole
-  apiGroup: rbac.authorization.k8s.io
----
-# Source: stub-helm-chart/templates/role.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: Role
-metadata:
-  name: release-name-stub-helm-chart
-  labels:
-    app: stub-helm-chart
-    chart: stub-helm-chart-3.3.1
-    heritage: Tiller
-    release: release-name
-rules:
-- apiGroups:      ['extensions']
-  resources:      ['podsecuritypolicies']
-  verbs:          ['use']
-  resourceNames:  [release-name-stub-helm-chart]
-
----
-# Source: stub-helm-chart/templates/rolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: RoleBinding
-metadata:
-  name: release-name-stub-helm-chart
-  labels:
-    app: stub-helm-chart
-    chart: stub-helm-chart-3.3.1
-    heritage: Tiller
-    release: release-name
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: release-name-stub-helm-chart
-subjects:
-- kind: ServiceAccount
-  name: release-name-stub-helm-chart
-  namespace: debug
 ---
 # Source: stub-helm-chart/templates/lb.yaml
 apiVersion: v1
@@ -214,80 +27,12 @@ spec:
     protocol: TCP
     targetPort: 3000
   selector:
-    app: stub-helm-chart
+    app: website
   type: LoadBalancer
 
 ---
-# Source: stub-helm-chart/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: release-name-stub-helm-chart
-  labels:
-    app: stub-helm-chart
-    chart: stub-helm-chart-3.3.1
-    release: release-name
-    heritage: Tiller
-spec:
-  type: ClusterIP
-  ports:
-    - name: service
-      port: 80
-      protocol: TCP
-      targetPort: 3000
-
-  selector:
-    app: stub-helm-chart
-    release: release-name
-
----
-# Source: stub-helm-chart/templates/tests/test.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: release-name-stub-helm-chart-test
-  labels:
-    app: release-name-stub-helm-chart
-    chart: "stub-helm-chart-3.3.1"
-    heritage: "Tiller"
-    release: "release-name"
-  annotations:
-    "helm.sh/hook": test-success
-spec:
-  initContainers:
-    - name: test-framework
-      image: "dduportal/bats:0.4.0"
-      command:
-      - "bash"
-      - "-c"
-      - |
-        set -ex
-        # copy bats to tools dir
-        cp -R /usr/local/libexec/ /tools/bats/
-      volumeMounts:
-      - mountPath: /tools
-        name: tools
-  containers:
-    - name: release-name-test
-      image: "dduportal/bats:0.4.0"
-      command: ["/tools/bats/bats", "-t", "/tests/run.sh"]
-      volumeMounts:
-        - mountPath: /tests
-          name: tests
-          readOnly: true
-        - mountPath: /tools
-          name: tools
-  volumes:
-  - name: tests
-    configMap:
-      name: release-name-stub-helm-chart-test
-  - name: tools
-    emptyDir: {}
-  restartPolicy: Never
-
----
 # Source: stub-helm-chart/templates/deployment.yaml
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: release-name-stub-helm-chart
@@ -301,93 +46,16 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stub-helm-chart
-      release: release-name
-  strategy:
-    type: RollingUpdate
+      app: website
   template:
     metadata:
       labels:
-        app: stub-helm-chart
-        release: release-name
+        app: website
     spec:
-      serviceAccountName: release-name-stub-helm-chart
-      securityContext:
-        fsGroup: 472
-        runAsUser: 472
-        
       containers:
-        - name: stub-helm-chart
-          image: "grafana/grafana:6.1.4"
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-            - name: config
-              mountPath: "/etc/grafana/grafana.ini"
-              subPath: grafana.ini
-            - name: ldap
-              mountPath: "/etc/grafana/ldap.toml"
-              subPath: ldap.toml
-            - name: storage
-              mountPath: "/var/lib/grafana"
-          ports:
-            - name: service
-              containerPort: 80
-              protocol: TCP
-            - name: grafana
-              containerPort: 3000
-              protocol: TCP
-          env:
-            - name: GF_SECURITY_ADMIN_USER
-              valueFrom:
-                secretKeyRef:
-                  name: release-name-stub-helm-chart
-                  key: admin-user
-            - name: GF_SECURITY_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: release-name-stub-helm-chart
-                  key: admin-password
-          livenessProbe:
-            failureThreshold: 10
-            httpGet:
-              path: /api/health
-              port: 3000
-            initialDelaySeconds: 60
-            timeoutSeconds: 30
-            
-          readinessProbe:
-            httpGet:
-              path: /api/health
-              port: 3000
-            
-          resources:
-            {}
-            
-      volumes:
-        - name: config
-          configMap:
-            name: release-name-stub-helm-chart
-        - name: ldap
-          secret:
-            secretName: release-name-stub-helm-chart
-            items:
-              - key: ldap-toml
-                path: ldap.toml
-        - name: storage
-          emptyDir: {}
-
----
-# Source: stub-helm-chart/templates/configmap-dashboard-provider.yaml
-
-
----
-# Source: stub-helm-chart/templates/dashboards-json-configmap.yaml
-
-
----
-# Source: stub-helm-chart/templates/ingress.yaml
-
-
----
-# Source: stub-helm-chart/templates/pvc.yaml
+      - name: site
+        image: gcr.io/np-com/simple_website:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP
 

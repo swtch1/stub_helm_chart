@@ -12,5 +12,5 @@ spec:
     protocol: TCP
     targetPort: 3000
   selector:
-    app: stub-helm-chart
+    app: website
   type: LoadBalancer
