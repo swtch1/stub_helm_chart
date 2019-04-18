@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: stub-helm-chart
-  name: externalgrafana
+  name: external
   namespace: {{ .Release.Namespace }}
 spec:
   externalTrafficPolicy: Cluster
