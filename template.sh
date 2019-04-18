@@ -2,5 +2,5 @@
 
 cd $(dirname $0)
 
-helm template . --name=v1-2-3 --values=values.yaml > generated/kubernetes/production.yaml
+helm template . --values=values.yaml > generated/kubernetes/production.yaml
 

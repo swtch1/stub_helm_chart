@@ -4,12 +4,12 @@
 apiVersion: extensions/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: v1-2-3-stub-helm-chart
+  name: release-name-stub-helm-chart
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
     heritage: Tiller
-    release: v1-2-3
+    release: release-name
   annotations:
     seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'docker/default'
     seccomp.security.alpha.kubernetes.io/defaultProfileName:  'docker/default'
@@ -58,16 +58,16 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: v1-2-3-stub-helm-chart
+  name: release-name-stub-helm-chart
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
-    release: v1-2-3
+    release: release-name
     heritage: Tiller
 type: Opaque
 data:
   admin-user: "YWRtaW4="
-  admin-password: "YUJLdUk4bnE0blA1cUk5T1RYYk85QndpR2hEMUR3dWZ4OGRLaXhCeA=="
+  admin-password: "OWYyQUVjZDJyVlVFejNmY3g4NXFZUWlQc1NkWXQ0VFEwQ2tnVlhKNw=="
   ldap-toml: ""
 
 ---
@@ -75,11 +75,11 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: v1-2-3-stub-helm-chart
+  name: release-name-stub-helm-chart
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
-    release: v1-2-3
+    release: release-name
     heritage: Tiller
 data:
   grafana.ini: |
@@ -100,16 +100,16 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: v1-2-3-stub-helm-chart-test
+  name: release-name-stub-helm-chart-test
   labels:
-    app: v1-2-3-stub-helm-chart
+    app: release-name-stub-helm-chart
     chart: "stub-helm-chart-3.3.1"
     heritage: "Tiller"
-    release: "v1-2-3"
+    release: "release-name"
 data:
   run.sh: |-
     @test "Test Health" {
-      url="http://v1-2-3-stub-helm-chart/api/health"
+      url="http://release-name-stub-helm-chart/api/health"
 
       code=$(curl -s -o /dev/null -I -w "%{http_code}" $url)
       [ "$code" == "200" ]
@@ -125,8 +125,8 @@ metadata:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
     heritage: Tiller
-    release: v1-2-3
-  name: v1-2-3-stub-helm-chart
+    release: release-name
+  name: release-name-stub-helm-chart
 
 ---
 # Source: stub-helm-chart/templates/clusterrole.yaml
@@ -137,9 +137,9 @@ metadata:
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
-    release: v1-2-3
+    release: release-name
     heritage: Tiller
-  name: v1-2-3-stub-helm-chart-clusterrole
+  name: release-name-stub-helm-chart-clusterrole
 rules: []
 
 ---
@@ -148,55 +148,55 @@ rules: []
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: v1-2-3-stub-helm-chart-clusterrolebinding
+  name: release-name-stub-helm-chart-clusterrolebinding
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
-    release: v1-2-3
+    release: release-name
     heritage: Tiller
 subjects:
   - kind: ServiceAccount
-    name: v1-2-3-stub-helm-chart
+    name: release-name-stub-helm-chart
     namespace: debug
 roleRef:
   kind: ClusterRole
-  name: v1-2-3-stub-helm-chart-clusterrole
+  name: release-name-stub-helm-chart-clusterrole
   apiGroup: rbac.authorization.k8s.io
 ---
 # Source: stub-helm-chart/templates/role.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
-  name: v1-2-3-stub-helm-chart
+  name: release-name-stub-helm-chart
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
     heritage: Tiller
-    release: v1-2-3
+    release: release-name
 rules:
 - apiGroups:      ['extensions']
   resources:      ['podsecuritypolicies']
   verbs:          ['use']
-  resourceNames:  [v1-2-3-stub-helm-chart]
+  resourceNames:  [release-name-stub-helm-chart]
 
 ---
 # Source: stub-helm-chart/templates/rolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
-  name: v1-2-3-stub-helm-chart
+  name: release-name-stub-helm-chart
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
     heritage: Tiller
-    release: v1-2-3
+    release: release-name
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: v1-2-3-stub-helm-chart
+  name: release-name-stub-helm-chart
 subjects:
 - kind: ServiceAccount
-  name: v1-2-3-stub-helm-chart
+  name: release-name-stub-helm-chart
   namespace: debug
 ---
 # Source: stub-helm-chart/templates/lb.yaml
@@ -222,11 +222,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: v1-2-3-stub-helm-chart
+  name: release-name-stub-helm-chart
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
-    release: v1-2-3
+    release: release-name
     heritage: Tiller
 spec:
   type: ClusterIP
@@ -238,19 +238,19 @@ spec:
 
   selector:
     app: stub-helm-chart
-    release: v1-2-3
+    release: release-name
 
 ---
 # Source: stub-helm-chart/templates/tests/test.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: v1-2-3-stub-helm-chart-test
+  name: release-name-stub-helm-chart-test
   labels:
-    app: v1-2-3-stub-helm-chart
+    app: release-name-stub-helm-chart
     chart: "stub-helm-chart-3.3.1"
     heritage: "Tiller"
-    release: "v1-2-3"
+    release: "release-name"
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -268,7 +268,7 @@ spec:
       - mountPath: /tools
         name: tools
   containers:
-    - name: v1-2-3-test
+    - name: release-name-test
       image: "dduportal/bats:0.4.0"
       command: ["/tools/bats/bats", "-t", "/tests/run.sh"]
       volumeMounts:
@@ -280,7 +280,7 @@ spec:
   volumes:
   - name: tests
     configMap:
-      name: v1-2-3-stub-helm-chart-test
+      name: release-name-stub-helm-chart-test
   - name: tools
     emptyDir: {}
   restartPolicy: Never
@@ -290,28 +290,28 @@ spec:
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: v1-2-3-stub-helm-chart
+  name: release-name-stub-helm-chart
   namespace: debug
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
-    release: v1-2-3
+    release: release-name
     heritage: Tiller
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: stub-helm-chart
-      release: v1-2-3
+      release: release-name
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
         app: stub-helm-chart
-        release: v1-2-3
+        release: release-name
     spec:
-      serviceAccountName: v1-2-3-stub-helm-chart
+      serviceAccountName: release-name-stub-helm-chart
       securityContext:
         fsGroup: 472
         runAsUser: 472
@@ -340,12 +340,12 @@ spec:
             - name: GF_SECURITY_ADMIN_USER
               valueFrom:
                 secretKeyRef:
-                  name: v1-2-3-stub-helm-chart
+                  name: release-name-stub-helm-chart
                   key: admin-user
             - name: GF_SECURITY_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: v1-2-3-stub-helm-chart
+                  name: release-name-stub-helm-chart
                   key: admin-password
           livenessProbe:
             failureThreshold: 10
@@ -366,10 +366,10 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: v1-2-3-stub-helm-chart
+            name: release-name-stub-helm-chart
         - name: ldap
           secret:
-            secretName: v1-2-3-stub-helm-chart
+            secretName: release-name-stub-helm-chart
             items:
               - key: ldap-toml
                 path: ldap.toml
