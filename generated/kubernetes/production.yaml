@@ -18,7 +18,7 @@ kind: Service
 metadata:
   labels:
     app: stub-helm-chart
-  name: externalgrafana
+  name: external
   namespace: debug
 spec:
   externalTrafficPolicy: Cluster
@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
       - name: site
-        image: gcr.io/np-com/simple_website:latest
+        image: gcr.io/pr-com-203715/simple_website:latest
         ports:
         - containerPort: 80
           protocol: TCP
