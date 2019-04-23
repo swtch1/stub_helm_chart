@@ -5,6 +5,7 @@ function show_help() {
   echo
   echo "options:"
   echo "-h, --help              Show brief help."
+  echo "-n, --namespace         Define the Kubernetes namespace."
   echo "-v, --values            Specify the values file. DEFAULT: values.yaml."
   echo "-o, --output-file=FILE  Specify the output file."
   echo
@@ -17,6 +18,19 @@ while test $# -gt 0; do
   case "$1" in
     -h|--help)
       show_help
+      ;;
+    -n)
+      shift
+      if test $# -gt 0;then
+        export NAMESPACE=$1
+      else
+        echo "namespace flag given but no namespace specified"
+        exit 1
+      fi
+      ;;
+    --namespace*)
+      export NAMESPACE=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
       ;;
     -v)
       shift
@@ -68,7 +82,12 @@ fi
 # ensure we're in the correct directory
 cd $(dirname $0)
 
+# define the full namespace string to be included, if one is given
+if [[ -n $NAMESPACE ]];then 
+  NAMESPACE_STR="--namespace=$NAMESPACE"
+fi
+
 # write out manifests
 echo "writing generated manifests to $OUTPUT"
-helm template . --values="$VALUES" > "$OUTPUT"
+helm template . --values="$VALUES" "$NAMESPACE_STR" > "$OUTPUT"
 
