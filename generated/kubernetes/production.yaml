@@ -19,7 +19,7 @@ metadata:
   labels:
     app: stub-helm-chart
   name: external
-  namespace: debug
+  namespace: default
 spec:
   externalTrafficPolicy: Cluster
   ports:
@@ -36,7 +36,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: release-name-stub-helm-chart
-  namespace: debug
+  namespace: default
   labels:
     app: stub-helm-chart
     chart: stub-helm-chart-3.3.1
