@@ -12,11 +12,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: website
+      app: websites
   template:
     metadata:
       labels:
-        app: website
+        app: websites
     spec:
       containers:
       - name: site
