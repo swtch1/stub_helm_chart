@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
       - name: site
-        image: gcr.io/np-com/simple_website:latest
+        image: gcr.io/np-com/simple_website:yall
         ports:
         - containerPort: 80
           protocol: TCP
