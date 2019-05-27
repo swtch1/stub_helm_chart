@@ -1,5 +1,5 @@
 repository:
-	description: Just a helm chart so I can test Spinnaker.
+  description: Just a helm chart so I can test Spinnaker.
 
   # Either `true` to allow merging pull requests with a merge commit, or `false`
   # to prevent merging pull requests with merge commits.
